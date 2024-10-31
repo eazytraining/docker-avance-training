@@ -12,7 +12,7 @@ curl -u toto:python -X GET http://127.0.0.1:5000/pozos/api/v1.0/get_student_ages
 
 nano website/index.php
 
-### rajouter après la ligne 24 ce code pour lire l'adresse de l'api et le port d'écoute de celle çi
+### rajouter après la ligne 23 ce code pour lire l'adresse de l'api et le port d'écoute de celle çi
 
 	      $api = getenv('API');
               $port = getenv('API_PORT');
