@@ -1,0 +1,18 @@
+## clone de l'application ##
+git clone https://github.com/MTA1711/contact-manager-angular-material.git
+
+## Remplacer le contenu du fichier Dockerfile par le contenu de Dockerfile-no-optimize du dossier de correction
+
+## Construire l'image fournit de base
+
+docker build -t contact-manager:v1 .
+docker images # pour voir la taille de l'image contact-manager (taille environ 1.75GB)
+
+## Mettre à jour le Dockerfile puis reconstruire l'image avec celui fournit dans la correction dont le nom est Dockerfile
+
+docker build -t contact-manager:v2 .
+docker images # pour voir la taille de l'image contact-manager (taille environ 38Mb)
+
+# Tester l'application
+
+docker run -d -p 8080:80 contact-manager:v2

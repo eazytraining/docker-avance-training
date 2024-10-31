@@ -1,0 +1,63 @@
+## Création du réseau où sera déployé wordpress
+
+docker network ls
+docker network create --help
+docker network create --driver bridge --subnet 172.30.0.0/16 wordpress_network
+docker network inspect wordpress_network
+
+## Deploiement du conteneur mysql ##
+
+#creation du volume de stockage
+
+docker volume create --name mysql_data
+docker volume ls
+docker volume inspect mysql_data
+
+# Démarrage du conteneur mysql ##
+
+docker run --name mysql \
+		   --network wordpress_network \
+		   -v mysql_data:/var/lib/mysql \
+		   -e MYSQL_DATABASE=wordpress_sparks \
+		   -e MYSQL_USER=sparks \
+ 		   -e MYSQL_PASSWORD=sparks \
+		   -e MYSQL_ROOT_PASSWORD=azerty \
+	       -d mysql:5.7
+
+## Démarrage du conteneur wordpress ##
+
+#creation du volume de stockage
+
+docker volume create --name wordpress_data
+docker volume ls
+docker volume inspect wordpress_data
+
+docker run --name wordpress \
+		   --network wordpress_network \
+		   -v wordpress_data:/var/www/html \
+		   -e WORDPRESS_DB_HOST=mysql \
+		   -e WORDPRESS_DB_USER=sparks \
+		   -e WORDPRESS_DB_PASSWORD=sparks \
+		   -e WORDPRESS_DB_NAME=wordpress_sparks \
+		   -p 8080:80 \
+	       -d wordpress
+		   
+## Vérification installation ##
+
+#inspecter le contenu des volumes créés
+sudo ls /var/lib/docker/volumes/mysql_data/_data
+sudo ls /var/lib/docker/volumes/wordpress_data/_data
+		  
+## Arrêt de la stack ##
+
+docker rm -f $(docker ps -aq)
+docker volume rm mysql_data  wordpress_data
+docker network rm wordpress_network
+
+## Démarrage via docker compose ##
+
+docker-compose up -d
+
+## Vérification installation ##
+
+ouvrir votre navigateur et tester 

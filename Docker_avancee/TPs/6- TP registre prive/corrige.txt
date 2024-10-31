@@ -1,0 +1,56 @@
+## Déploiement du backend ## 
+
+#Se connecter sur la machine registry 
+
+vagrant ssh registry
+
+docker network create registry_network
+docker volume create registry_data
+docker run -d -p 5000:5000 --network registry_network -v registry_data:/var/lib/registry --name registry registry:2.8.1
+
+## Déploiement du frontend  ## 
+
+documentation: https://hub.docker.com/r/hyper/docker-registry-web/
+
+docker run -d -p 8080:80 --network registry_network --name registry_ui -e NGINX_PROXY_PASS_URL=http://registry:5000 -e DELETE_IMAGES=true -e REGISTRY_TITLE=registry_ui joxit/docker-registry-ui:2
+
+## Consulter le frontend sur le port 8080 de votre machine ## 
+images/ui_before_push.png
+
+## Publication d'une image nginx dans notre hub (PUSH EN LOCAL) ## 
+
+docker pull nginx:alpine
+docker tag nginx:alpine localhost:5000/nginx:local
+docker images
+docker push localhost:5000/nginx:local
+
+## Vérification ##
+
+curl http://registry:5000/v2/nginx/tags/list
+
+ou ouvrir notre frontend et s'assurer que le résultat est comme suit: 
+	images/registry_ui_after_push_local_1.png et images/registry_ui_after_push_local_2.png
+
+## Publication de l'image simple_api de l'application student-list (PUSH DEPUIS UNE MACHINE DISTANTE) ##
+
+#revenir sur la machine manager
+
+docker tag simple_api:v1 <ip_public_de_notre_registry:5000>/simple_api:v1
+docker push <ip_public_de_notre_registry:5000>/simple_api:v1 #la commande échoue
+
+#Donner la possibilité de pousser dans un registre qui n'est pas en HTTPS https://docs.docker.com/registry/insecure/
+
+vi /etc/docker/daemon.json
+
+#rajoutter
+{
+  "insecure-registries" : ["<ip_public_de_notre_registry:5000>"]
+}
+
+#restart daemon docker
+sudo systemctl restart docker
+
+docker push docker push <ip_public_de_notre_registry:5000>/simple_api:v1
+
+Consulter le frontend et verifier que le resultat est comme suit:
+	registry_ui_after_push_remote_1.png et registry_ui_after_push_remote_2.png

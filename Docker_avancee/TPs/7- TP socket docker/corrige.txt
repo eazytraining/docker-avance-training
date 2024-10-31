@@ -1,0 +1,38 @@
+## Dans un terminal se connecter à la VM Dworker ##
+
+vagrant ssh worker1
+
+## voir l'état du service docker ##
+
+sudo systemctl status docker
+
+## mettre à jour la commande de démarrage du daemon ##
+
+nano /usr/lib/systemd/system/docker.service #mettre à jour la ligne 13 par: ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 docker --context default run -d -p 80:80 httpd
+sudo systemctl daemon-reload
+sudo systemctl start docker
+
+## Dans un terminal se connecter à la VM Dmaster créer un context pour la mchine Dworker ## 
+
+docker context ls
+docker context inspect default
+docker context create --help
+docker context create dworker --description "Worker host docker daemon" --docker "host=tcp://192.168.99.11:2375" 
+docker context inspect dworker
+
+## Changer de context
+
+docker context use dworker
+docker context ls
+
+## demarrer une image nginx pour faire un test ##
+
+docker run -d -p 80:80 nginx:alpine
+
+#acceder à l'ihm avec l'ip de la machine master: ne fonctionne pas, avec l'ip machine dworker tout fonctionne
+#aller sur la machine dworker
+
+docker ps # voir le conteneur nginx en cours d'exécution
+
+# sur la machine dmaster démarrer un conteneur apache et tester
+docker --context default run -d -p 80:80 apache

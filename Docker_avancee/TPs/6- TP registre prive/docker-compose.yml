@@ -1,0 +1,37 @@
+version: '3.3'
+services:
+  registry:
+    image: registry:2
+    container_name: registry
+    hostname: registry
+    environment:
+      - REGISTRY_STORAGE_DELETE_ENABLE=true
+      - REGISTRY_HTTP_HEADERS_Access-Control-Allow-Origin=['*']
+      - REGISTRY_HTTP_HEADERS_Access-Control-Allow-Methods=['*']
+      - REGISTRY_HTTP_HEADERS_Access-Control-Allow-Headers=['*']
+      - REGISTRY_HTTP_HEADERS_Access-Control-Expose-Headers=['Docker-Content-Digest']
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry_data:/var/lib/registry
+    networks:
+      - registry_network
+  registryui:
+    image: joxit/docker-registry-ui:2
+    container_name: registryui
+    hostname: registryui
+    depends_on:
+      - registry
+    environment:
+      - REGISTRY_TITLE=ALLBLUE REGISTRY
+      - REGISTRY_URL=http://192.168.99.11:5000
+      - DELETE_IMAGES=true
+      - SINGLE_REGISTRY=true
+    ports:
+      - "8080:80"
+    networks:
+      - registry_network
+volumes:
+  registry_data:
+networks:
+  registry_network:

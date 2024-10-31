@@ -1,0 +1,26 @@
+## Construction et test de l'api 
+
+git clone https://github.com/MTA1711/student-list.git 
+
+cd student-list/simple_api
+docker build -t student_api:v1 .
+
+docker run --name student_api -v ${PWD}/student_age.json:/data/student_age.json -p 5000:5000 -d student_api:v1
+curl -u toto:python -X GET http://127.0.0.1:5000/pozos/api/v1.0/get_student_ages
+
+## Update du code du website
+
+nano website/index.php
+
+### rajouter après la ligne 24 ce code pour lire l'adresse de l'api et le port d'écoute de celle çi
+
+	      $api = getenv('API');
+              $port = getenv('API_PORT');
+              if ( empty($api) ) $api = 'localhost';
+              if ( empty($port) ) $port = '8080';
+
+### modifier la variable $url par: $url = "http://{$api}:{$port}>/pozos/api/v1.0/get_student_ages";
+
+## Démarrer l'application via Doccker compose
+
+docker-compose up -d

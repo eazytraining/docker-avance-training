@@ -1,0 +1,36 @@
+version: '3.1'
+services:
+  wordpress:
+    image: wordpress
+    ports:
+      - 8080:80
+    environment:
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_USER=sparks
+      - WORDPRESS_DB_PASSWORD=sparks
+      - WORDPRESS_DB_NAME=wordpress_sparks
+    volumes:
+      - wordpress_data:/var/www/html
+    networks:
+      - wordpress_network
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=wordpress_sparks
+      - MYSQL_USER=sparks
+      - MYSQL_PASSWORD=sparks
+      - MYSQL_ROOT_PASSWORD=azerty
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - wordpress_network
+
+volumes:
+  wordpress_data:
+  mysql_data:
+
+networks:
+  wordpress_network:

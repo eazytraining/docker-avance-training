@@ -1,0 +1,48 @@
+## Démarrer le reverse proxy nginx proxy en montant la socket dans le container en read-only
+
+docker run -d --name nginx-proxy  -p 80:80  -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy
+
+## Demarrer wordpress avec les variables VIRTUAL_HOST et/ou VIRTUAL_PORT utiliser cette variable si le port n'est pas le 80
+
+docker run -d --name wordpress-db \
+    -e MYSQL_ROOT_PASSWORD=wordpress \
+    -e MYSQL_DATABASE=wordpress \
+    -e MYSQL_USER=wordpress \
+    -e MYSQL_PASSWORD=wordpress \
+    mysql:5.7
+
+
+docker run -d --name wordpress \
+    --link wordpress-db:mysql \
+    -e WORDPRESS_DB_HOST=wordpress-db \
+    -e WORDPRESS_DB_USER=wordpress \
+    -e WORDPRESS_DB_PASSWORD=wordpress \
+    -e WORDPRESS_DB_NAME=wordpress \
+    -e VIRTUAL_HOST=wordpress.eazytraining.io \
+    wordpress
+
+## Demarrer student-list via docker run en spécifiant les variables VIRTUAL_HOST et/ou VIRTUAL_PORT pour le container serveur web
+
+docker run -d --name contact -e VIRTUAL_HOST=student-list.eazytraining.io image_student
+
+## Sur la machine réelle windows, démarrer git bash en admin
+
+cd /c/Windows/System32/drivers/etc/
+cat hosts
+cp hosts hosts.back #pour sauvegarde en cas de soucis
+nano hosts
+
+###rajouter les entrées dns au fichier puis sauvegarder
+	192.168.99.10   wordpress.eazytraining.io
+        192.168.99.10   student-list.eazytraining.io
+
+## Tester les differentes url dans le navigateur de la machine réelle
+
+
+## Stopper tous les conteneurs
+
+docker rm -f $(docker ps -aq)
+
+## Redémarrer notre architecture via docker-compose
+
+docker compose up -d -f ./docker-compose-mutual-server.yml

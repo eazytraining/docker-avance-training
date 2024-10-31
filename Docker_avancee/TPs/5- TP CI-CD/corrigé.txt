@@ -1,0 +1,35 @@
+## Commit a push de l'image de l'application contact manager ##
+
+# Forker le projet https://github.com/MTA1711/contact-manager-angular-material.git dans votre compte github depuis l'interface de github
+
+# Rajouter se nouveau projet comme remote dans repertoire de l'application
+
+git remote remove origin
+git remote add origin https://github.com/<ID_GITHUB>/contact-manager-angular-material.git
+
+# Le fichier Dockerfile doit être le seul a avoir changé
+
+git status
+
+# Configurer git
+
+git config --global user.email "YOUR USER_EMAIL"
+git config --global user.name  "YOUR USER_NAME"
+
+# Commit et push de la modification
+
+git commit -am "Dockerfile optimization"
+git push origin main
+
+# Rajouter le repertoire de pipeline présents dans le dossier de correction au code source
+
+# créer des secrets DOCKERHUB_USERNAME DOCKERHUB_TOKEN dans le repository github
+
+# Committer et pouser la branche main (mettre à jour la ligne 34 avec votre id du docker hub)
+
+git status
+git commit -am "Configure pipeline"
+git push origin main
+
+# verifier dans l'onglet action que la pipeline c'est bien exécuter
+# vérifier sur le docker hub la présence de votre image

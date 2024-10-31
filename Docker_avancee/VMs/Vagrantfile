@@ -1,0 +1,48 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    config.vm.define "dmaster" do |dmaster|
+      dmaster.vm.box = "geerlingguy/centos7"
+      dmaster.vm.network "private_network", type: "static", ip: "192.168.99.10"
+      dmaster.vm.hostname = "dmaster"
+      dmaster.vm.provider "virtualbox" do |v|
+        v.name = "dmaster"
+        v.memory = 2048
+        v.cpus = 2
+      end
+      dmaster.vm.provision :shell do |shell|
+        shell.path = "install_docker.sh"
+      end
+    end
+
+    config.vm.define "dregistry" do |dregistry|
+      dregistry.vm.box = "geerlingguy/centos7"
+      dregistry.vm.network "private_network", type: "static", ip: "192.168.99.11"
+      dregistry.vm.hostname = "dregistry"
+      dregistry.vm.provider "virtualbox" do |v|
+        v.name = "dregistry"
+        v.memory = 1024
+        v.cpus = 1
+      end
+      dregistry.vm.provision :shell do |shell|
+        shell.path = "install_docker.sh"
+      end
+    end
+    
+    config.vm.define "dworker" do |dworker|
+      dworker.vm.box = "geerlingguy/centos7"
+      dworker.vm.network "private_network", type: "static", ip: "192.168.99.12"
+      dworker.vm.hostname = "dworker"
+      dworker.vm.provider "virtualbox" do |v|
+        v.name = "dworker"
+        v.memory = 1024
+        v.cpus = 1
+      end
+      dworker.vm.provision :shell do |shell|
+        shell.path = "install_docker.sh"
+      end
+    end
+  
+  end
+  
