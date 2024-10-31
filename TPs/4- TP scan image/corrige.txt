@@ -1,12 +1,3 @@
-## Scan image node js ## sur docker desktop
-
-docker scan --version
-docker scan node # la commande échoue il faut se logger à son compte dockerhub
-
-docker login
-
-docker scan node
-
 ## Avec Trivy
 
 wget https://github.com/aquasecurity/trivy/releases/download/v0.55.2/trivy_0.55.2_Linux-64bit.tar.gz
