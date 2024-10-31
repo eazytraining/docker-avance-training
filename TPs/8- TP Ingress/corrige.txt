@@ -38,7 +38,7 @@ docker run -d \
   -v "${PWD}/website:/var/www/html" \
   -e USERNAME=toto \
   -e PASSWORD=python \
-  -e API=api \
+  -e API=student \
   -e API_PORT=5000 \
   -e VIRTUAL_HOST=student-list.eazytraining.io \
   php:apache
