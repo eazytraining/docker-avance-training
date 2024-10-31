@@ -43,4 +43,4 @@ jobs:
     -
       name: Scan Docker image with Trivy
       run: |
-        trivy image blondel/contact-manager:latest
+        trivy image DOCKERHUB_USERNAME/contact-manager:latest
