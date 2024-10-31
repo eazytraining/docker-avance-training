@@ -34,7 +34,6 @@ docker run --name student -v ${PWD}/simple_api/student_age.json:/data/student_ag
 docker run -d \
   --name web \
   --link student \
-  -p 80:80 \
   -v "${PWD}/website:/var/www/html" \
   -e USERNAME=toto \
   -e PASSWORD=python \
