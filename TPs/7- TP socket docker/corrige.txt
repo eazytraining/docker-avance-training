@@ -8,8 +8,7 @@ sudo systemctl status docker
 
 ## mettre à jour la commande de démarrage du daemon ##
 
-nano /usr/lib/systemd/system/docker.service #mettre à jour la ligne 13 par: ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375 docker --context default run -d -p 80:80 httpd
-sudo systemctl daemon-reload
+nano /usr/lib/systemd/system/docker.service #mettre à jour la ligne 13 par: ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
 sudo systemctl start docker
 
 ## Dans un terminal se connecter à la VM Dmaster créer un context pour la mchine Dworker ## 
