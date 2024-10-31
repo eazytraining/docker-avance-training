@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  wordpress-db:
+    image: mysql:5.7
+    container_name: wordpress-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=wordpress
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    environment:
+      - WORDPRESS_DB_HOST=wordpress-db
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+      - WORDPRESS_DB_NAME=wordpress
+      - VIRTUAL_HOST=wordpress.eazytraining.io
+    depends_on:
+      - wordpress-db
+
+  student_api:
+    image: student_api:v1
+    container_name: student
+    volumes:
+      - ${PWD}/simple_api/student_age.json:/data/student_age.json
+    ports:
+      - "5000:5000"
+
+  php:
+    image: php:apache
+    container_name: web
+    environment:
+      - USERNAME=toto
+      - PASSWORD=python
+      - API=student
+      - API_PORT=5000
+      - VIRTUAL_HOST=student-list.eazytraining.io
+    volumes:
+      - ${PWD}/website:/var/www/html
+    depends_on:
+      - student_api
