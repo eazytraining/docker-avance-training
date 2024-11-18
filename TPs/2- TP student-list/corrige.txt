@@ -1,6 +1,6 @@
 ## Construction et test de l'api 
 
-git clone https://github.com/MTA1711/student-list.git 
+git clone https://github.com/eazytraining/student-list.git 
 
 cd student-list/simple_api
 docker build -t student_api:v1 .
